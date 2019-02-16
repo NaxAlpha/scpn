@@ -157,7 +157,7 @@ if __name__ == '__main__':
     # load paraphrase network
     pp_args = pp_model['config_args']
     net = SCPN(pp_args.d_word, pp_args.d_hid, pp_args.d_nt, pp_args.d_trans,
-        len(pp_vocab), len(parse_gen_voc) - 1, pp_args.use_input_parse)
+        len(pp_vocab), len(parse_gen_voc), pp_args.use_input_parse)
     net.cuda()
     net.load_state_dict(pp_model['state_dict'])
     net.eval()

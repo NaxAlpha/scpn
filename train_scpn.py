@@ -1,5 +1,6 @@
 
 import torch, time, argparse, os, codecs, h5py, cPickle, random
+torch.backends.cudnn.enabled=False
 import numpy as np
 from torch import nn
 from torch import optim
@@ -486,11 +487,11 @@ if __name__ == '__main__':
             help='word vocabulary')
     parser.add_argument('--parse_vocab', type=str, default='data/ptb_tagset.txt',
             help='tag vocabulary')
-    parser.add_argument('--model', type=str, default='scpn2.pt',
+    parser.add_argument('--model', type=str, default='scpn.pt',
             help='model save path')
     parser.add_argument('--batch_size', type=int, default=64,
             help='batch size')
-    parser.add_argument('--min_sent_length', type=int, default=5,
+    parser.add_argument('--min_sent_length', type=int, default=3,
             help='min number of tokens per batch')
     parser.add_argument('--d_word', type=int, default=300,
             help='word embedding dimension')
@@ -512,7 +513,7 @@ if __name__ == '__main__':
             help='how much to decrease LR every epoch')
     parser.add_argument('--eval_mode', type=bool, default=False,
             help='run beam search for some examples using a trained model')
-    parser.add_argument('--init_trained_model', type=int, default=0,
+    parser.add_argument('--init_trained_model', type=int, default=1,
             help='continue training a cached model')
     parser.add_argument('--tree_dropout', type=float, default=0.,
             help='dropout rate for dropping tree terminals')
@@ -563,8 +564,8 @@ if __name__ == '__main__':
     label_voc = {}
     for idx, line in enumerate(tag_file):
         line = line.strip()
-        if line != 'EOP':
-            label_voc[line] = idx
+        # if line != 'EOP':
+        label_voc[line] = idx
     rev_label_voc = dict((v,k) for (k,v) in label_voc.iteritems()) 
 
     len_voc = len(vocab)
@@ -577,6 +578,8 @@ if __name__ == '__main__':
     train_minibatches = minibatches[args.dev_batches:]
     dev_minibatches = minibatches[:args.dev_batches]
 
+    print '=========================================='
+    print len_parse_voc
     # build network
     net = SCPN(d_word, d_hid, d_nt, d_trans,
         len_voc, len_parse_voc, args.use_input_parse)
@@ -659,7 +662,7 @@ if __name__ == '__main__':
             # torchify input
             curr_inp = Variable(torch.from_numpy(inp_np.astype('int32')).long().cuda())
             curr_out = Variable(torch.from_numpy(out_np.astype('int32')).long().cuda())
-            in_trans = Variable(torch.from_numpy(in_trans_np).long(98).cuda())
+            in_trans = Variable(torch.from_numpy(in_trans_np).long().cuda())
             out_trans = Variable(torch.from_numpy(out_trans_np).long().cuda())
             in_sent_lens = torch.from_numpy(in_len_np).long().cuda()
             out_sent_lens = torch.from_numpy(out_len_np).long().cuda()
