@@ -606,6 +606,7 @@ if __name__ == '__main__':
             print 'new LR:', param_group['lr']
 
     for ep in range(n_epochs):
+        print('7 wonders %s'%ep)
         random.shuffle(train_minibatches)
         ep_loss = 0.
         start_time = time.time()
@@ -622,7 +623,8 @@ if __name__ == '__main__':
             if z == None:
                 print('what happened!')
                 continue
-
+            
+            print('ok close_1')
             in_trans_np, out_trans_np, mismatch_inds, in_trans_len_np, out_trans_len_np = z
 
             # only store valid input instances
@@ -639,12 +641,14 @@ if __name__ == '__main__':
             # compute max output length and chop output (for decoder efficiency)
             max_out_len = int(np.amax(out_len_np))
             out_np = out_np[:, :max_out_len]
-
+            
+            print('The 2-thrones')
             # sentences are too short
             if max_in_len < args.min_sent_length:
                 continue
 
             # downsample if input sentences are too short
+            print('Totally 3')
             if args.short_batch_downsampling_freq > 0. and max_in_len < args.short_batch_threshold:
                 if np.random.rand() < args.short_batch_downsampling_freq:
                     continue
@@ -658,6 +662,7 @@ if __name__ == '__main__':
                 in_len_np, out_len_np = out_len_np, in_len_np
                 in_trans_len_np, out_trans_len_np = out_trans_len_np, in_trans_len_np
 
+            print('4th wall')
             # torchify input
             curr_inp = Variable(torch.from_numpy(inp_np.astype('int32')).long().cuda())
             curr_out = Variable(torch.from_numpy(out_np.astype('int32')).long().cuda())
@@ -676,6 +681,7 @@ if __name__ == '__main__':
 
             # if training, compute loss and backprop
             if not args.eval_mode:
+                print('5 grands')
                 
                 # compute masked loss
                 loss = criterion(preds, curr_out.view(-1))
@@ -688,6 +694,7 @@ if __name__ == '__main__':
 
             # if training, save model and print some predictions every save_freq minibatches
             # if eval, just do beam search on a few instances per minibatch
+            print('6th sense')
             if args.eval_mode or (b_idx % args.save_freq == 0):
                 preds = preds.view(curr_bsz, max_out_len, -1).cpu().data.numpy()
                 preds = np.argmax(preds, -1)
