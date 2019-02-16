@@ -11,7 +11,7 @@ DATA_PRE_PROCESS = None
 ALLOWED_CONFIG = ['batch_size', 'min_sent_length', 'd_word', 'd_trans', 'd_nt', 'd_hid', 'n_epochs', 'lr', 'grad_clip', 'save_freq', 'lr_decay_factor', 'init_trained_model', 'tree_dropout', 'tree_level_dropout', 'short_batch_downsampling_freq', 'short_batch_threshold', 'seed', 'dev_batches']
 
 
-def validate_training_config(cfg):
+def validate_training_config():
     global ALLOWED_CONFIG
     cfg = request.get_json()
     for key in cfg:
@@ -34,6 +34,7 @@ def default_response(fx):
 @default_response
 def start_training():
     global lock, TRAINING_PROCESS
+    cfg = validate_training_config()
     args = ['--%s=%s' % (key, str(val)) for key, val in cfg.items()]
     with lock:
         TRAINING_PROCESS = subprocess.Popen(['python', 'train_scpn.py'] + args, cwd=os.getcwd(), stdout=open('temp/logs.txt', 'w'))
