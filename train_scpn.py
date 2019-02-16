@@ -578,8 +578,6 @@ if __name__ == '__main__':
     train_minibatches = minibatches[args.dev_batches:]
     dev_minibatches = minibatches[:args.dev_batches]
 
-    print '=========================================='
-    print len_parse_voc
     # build network
     net = SCPN(d_word, d_hid, d_nt, d_trans,
         len_voc, len_parse_voc, args.use_input_parse)
