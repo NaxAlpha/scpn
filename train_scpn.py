@@ -565,7 +565,7 @@ if __name__ == '__main__':
     for idx, line in enumerate(tag_file):
         line = line.strip()
         #if line != 'EOP':
-        #    label_voc[line] = idx
+        label_voc[line] = idx
     rev_label_voc = dict((v,k) for (k,v) in label_voc.iteritems()) 
     print('===============================')
     print(label_voc)
