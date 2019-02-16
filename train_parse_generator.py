@@ -1,5 +1,6 @@
 
 import torch, time, sys, argparse, os, codecs, h5py, cPickle, random
+torch.backends.cudnn.enabled=False
 import numpy as np
 from torch import nn
 from torch import optim
