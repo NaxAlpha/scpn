@@ -567,9 +567,6 @@ if __name__ == '__main__':
         #if line != 'EOP':
         label_voc[line] = idx
     rev_label_voc = dict((v,k) for (k,v) in label_voc.iteritems()) 
-    print('===============================')
-    print(label_voc)
-    print('===============================')
 
     len_voc = len(vocab)
     len_parse_voc = len(label_voc)
@@ -623,6 +620,7 @@ if __name__ == '__main__':
             # get valid instances of transformations
             z = indexify_transformations(in_p, out_p, label_voc, args)
             if z == None:
+                print('what happened!')
                 continue
 
             in_trans_np, out_trans_np, mismatch_inds, in_trans_len_np, out_trans_len_np = z
