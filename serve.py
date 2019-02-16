@@ -11,22 +11,49 @@ DATA_PRE_PROCESS = None
 ALLOWED_CONFIG = ['batch_size', 'min_sent_length', 'd_word', 'd_trans', 'd_nt', 'd_hid', 'n_epochs', 'lr', 'grad_clip', 'save_freq', 'lr_decay_factor', 'init_trained_model', 'tree_dropout', 'tree_level_dropout', 'short_batch_downsampling_freq', 'short_batch_threshold', 'seed', 'dev_batches']
 
 
-@app.route('/train/start', methods=['POST'])
-def start_training():
-    global lock, TRAINING_PROCESS, ALLOWED_CONFIG
-    if TRAINING_PROCESS is not None:
-        return jsonify(error=1, message='Training already running.')
+def validate_training_config(cfg):
+    global ALLOWED_CONFIG
     cfg = request.get_json()
     for key in cfg:
         if key not in ALLOWED_CONFIG:
-            return jsonify(error=2, message='Key %s is not recognized!' % key)
+            return Exception('Key %s is not recognized!' % key)
         if not isinstance(cfg[key], (str, int, float)):
-            return jsonify(error=3, message='Key %s has wired type %s' % (key, type(key)))
-    
+            return Exception('Key %s has wired type %s' % (key, type(key)))
+
+
+def default_response(fx):
+    def _fx(*arg, **kwargs):
+        try:
+            return jsonify(error=0, message=fx())
+        except Exception as ex:
+            return jsonify(error=hash(ex.__str__()), message=type(ex) + ':' + ex.__str__())
+    return fx
+
+
+@app.route('/train/start', methods=['POST'])
+@default_response
+def start_training():
+    global lock, TRAINING_PROCESS
     args = ['--%s=%s' % (key, str(val)) for key, val in cfg.items()]
     with lock:
-        TRAINING_PROCESS = subprocess.Popen(['python', 'train_scpn.py'] + args, cwd=os.getcwd(), stdout=open('logs.txt', 'w'))
-    return jsonify(error=0, message='Training started successfully!')
+        TRAINING_PROCESS = subprocess.Popen(['python', 'train_scpn.py'] + args, cwd=os.getcwd(), stdout=open('temp/logs.txt', 'w'))
+    return 'Training started successfully!'
+
+
+@app.route('/train/stop')
+@default_response
+def stop_training():
+    global lock, TRAINING_PROCESS
+    with lock:
+        TRAINING_PROCESS.kill()
+        TRAINING_PROCESS = None
+    return 'Training stopped!'
+
+
+@app.route('/train/logs')
+def training_logs():
+    with open('temp/logs.txt') as f:
+        return f.read()
 
 
 if __name__ == '__main__':
