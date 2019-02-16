@@ -570,8 +570,6 @@ if __name__ == '__main__':
     print('===============================')
     print(label_voc)
     print('===============================')
-    print(vocab)
-    print('===============================')
 
     len_voc = len(vocab)
     len_parse_voc = len(label_voc)
