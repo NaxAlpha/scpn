@@ -1,4 +1,5 @@
 from flask import *
+import os
 import subprocess
 from threading import Lock
 
@@ -22,9 +23,9 @@ def start_training():
         if not isinstance(cfg[key], (str, int, float)):
             return jsonify(error=3, message='Key %s has wired type %s' % (key, type(key)))
     
-    args = ' '.join('--%s=%s' % (key, str(val)) for key, val in cfg.items())
+    args = ['--%s=%s' % (key, str(val)) for key, val in cfg.items()]
     with lock:
-        TRAINING_PROCESS = subprocess.Popen('python train_scpn.py %s > logs.txt'%args)
+        TRAINING_PROCESS = subprocess.Popen(['python', 'train_scpn.py'] + args + ['>', 'logs.txt'], cwd=os.getcwd())
     return jsonify(error=0, message='Training started successfully!')
 
 
