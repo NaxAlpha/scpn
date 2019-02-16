@@ -4,6 +4,7 @@ import subprocess
 from threading import Lock
 import shutil
 from uuid import uuid4
+from functools import wraps
 
 app = Flask(__name__)
 lock = Lock()
@@ -14,6 +15,8 @@ ALLOWED_CONFIG = ['batch_size', 'min_sent_length', 'd_word', 'd_trans', 'd_nt', 
 
 
 def default_response(fx):
+
+    @wraps(fx)
     def _fx(*args, **kwargs):
         try:
             res = fx(*args, **kwargs)
