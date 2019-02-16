@@ -19,9 +19,10 @@ def start_training():
     for key in cfg:
         if key not in ALLOWED_CONFIG:
             return jsonify(error=2, message='Key %s is not recognized!' % key)
-        if not isinstance(cfg[key], (str, int, float))
+        if not isinstance(cfg[key], (str, int, float)):
             return jsonify(error=3, message='Key %s has wired type %s' % (key, type(key)))
-    args = ' '.join('--%s=%s'%(key, str(val) for key, val in cfg.items()))
+    
+    args = ' '.join('--%s=%s' % (key, str(val)) for key, val in cfg.items())
     with lock:
         TRAINING_PROCESS = subprocess.Popen('python train.py %s >'%args)
     return jsonify(error=0, message='Training started successfully!')
