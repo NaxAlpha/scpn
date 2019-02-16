@@ -72,7 +72,7 @@ def stop_training():
 @default_response
 def training_logs():
     with open('temp/logs.txt') as f:
-        return f.read()
+        return dict(logs=f.read())
 
 
 @app.route('/snapshot')
