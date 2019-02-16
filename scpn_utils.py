@@ -46,8 +46,8 @@ def indexify_transformations(in_p, out_p, label_voc, args):
         if in_full_trans != out_full_trans:
             # make sure everything is invocab
             try:
-                x = [label_voc[z] for z in in_full_trans]
-                x = [label_voc[z] for z in out_full_trans]
+                x = [label_voc[z] for z in in_full_trans if z!='EOP']
+                x = [label_voc[z] for z in out_full_trans if z!='EOP']
                 in_seqs.append(in_full_trans)
                 out_seqs.append(out_full_trans)
                 mismatch_inds.append(idx)
