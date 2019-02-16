@@ -10,7 +10,7 @@ DATA_PRE_PROCESS = None
 ALLOWED_CONFIG = ['batch_size', 'min_sent_length', 'd_word', 'd_trans', 'd_nt', 'd_hid', 'n_epochs', 'lr', 'grad_clip', 'save_freq', 'lr_decay_factor', 'init_trained_model', 'tree_dropout', 'tree_level_dropout', 'short_batch_downsampling_freq', 'short_batch_threshold', 'seed', 'dev_batches']
 
 
-@app.route('/train/start')
+@app.route('/train/start', methods=['POST'])
 def start_training():
     global lock, TRAINING_PROCESS, ALLOWED_CONFIG
     if TRAINING_PROCESS is not None:
