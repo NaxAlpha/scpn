@@ -23,7 +23,8 @@ def indexify_transformations(in_p, out_p, label_voc, args):
         try:
             in_tree = ParentedTree.fromstring(in_p[idx])
             out_tree = ParentedTree.fromstring(out_p[idx])
-        except:
+        except Exception as ex:
+            print 'Why1: %s' % ex.__str__()
             continue
 
         if args.tree_dropout > 0:
@@ -50,8 +51,8 @@ def indexify_transformations(in_p, out_p, label_voc, args):
                 in_seqs.append(in_full_trans)
                 out_seqs.append(out_full_trans)
                 mismatch_inds.append(idx)
-            except:
-                pass
+            except Exception as ex:
+                print 'Why2: %s' % ex.__str__()
 
     # no syntactic transformations in the batch!
     if len(in_seqs) == 0:
@@ -152,7 +153,8 @@ def parse_indexify_transformations(in_p, out_p, label_voc, args):
             in_orig = ParentedTree.fromstring(in_p[idx])
             out_trimmed = ParentedTree.fromstring(out_p[idx])
             out_orig = ParentedTree.fromstring(out_p[idx])
-        except:
+        except Exception as ex:
+            print 'Why3: %s' % ex.__str__()
             continue
 
         out_dh = parse_tree_level_dropout(out_trimmed, args.tree_level_dropout)
@@ -178,8 +180,8 @@ def parse_indexify_transformations(in_p, out_p, label_voc, args):
                 out_seqs.append(out_orig)
                 out_trimmed_seqs.append(out_trimmed)
                 in_trimmed_seqs.append(in_trimmed)
-            except:
-                pass
+            except Exception as ex:
+                print 'Why4: %s' % ex.__str__()
 
     # no syntactic transformations in the batch!
     if len(in_seqs) == 0:
