@@ -67,11 +67,11 @@ def indexify_transformations(in_p, out_p, label_voc, args):
         out_lengths = []
         for idx in range(len(in_seqs)):
             curr_in = in_seqs[idx]
-            in_trans_np[idx, :len(curr_in)] = [label_voc[z] for z in curr_in]
+            in_trans_np[idx, :len(curr_in)] = [label_voc[z] for z in curr_in  if z!='EOP']
             in_lengths.append(len(curr_in))
 
             curr_out = out_seqs[idx]
-            out_trans_np[idx, :len(curr_out)] = [label_voc[z] for z in curr_out]
+            out_trans_np[idx, :len(curr_out)] = [label_voc[z] for z in curr_out  if z!='EOP']
             out_lengths.append(len(curr_out))
 
         return in_trans_np, out_trans_np, mismatch_inds,\
