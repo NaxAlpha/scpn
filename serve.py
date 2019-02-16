@@ -36,6 +36,8 @@ def validate_training_config():
 @default_response
 def start_training():
     global lock, TRAINING_PROCESS
+    if TRAINING_PROCESS is not None:
+        raise Exception('Training already running.')
     cfg = validate_training_config()
     args = ['--%s=%s' % (key, str(val)) for key, val in cfg.items()]
     with lock:
@@ -54,9 +56,16 @@ def stop_training():
 
 
 @app.route('/train/logs')
+@default_response
 def training_logs():
     with open('temp/logs.txt') as f:
         return f.read()
+
+
+@app.route('/snapshot')
+@default_response
+def get_snapshot():
+    pass
 
 
 if __name__ == '__main__':
