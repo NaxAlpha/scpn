@@ -27,7 +27,7 @@ def default_response(fx):
                 rsp.update(result=res)
             return jsonify(**rsp)
         except Exception as ex:
-            return jsonify(error=hash(ex.__str__()), message=type(ex) + ':' + ex.__str__())
+            return jsonify(error=hash(ex.__str__()), message='%s:%s' % (type(ex), ex))
 
     return _fx
 
