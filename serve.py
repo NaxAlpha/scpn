@@ -11,23 +11,24 @@ DATA_PRE_PROCESS = None
 ALLOWED_CONFIG = ['batch_size', 'min_sent_length', 'd_word', 'd_trans', 'd_nt', 'd_hid', 'n_epochs', 'lr', 'grad_clip', 'save_freq', 'lr_decay_factor', 'init_trained_model', 'tree_dropout', 'tree_level_dropout', 'short_batch_downsampling_freq', 'short_batch_threshold', 'seed', 'dev_batches']
 
 
+def default_response(fx):
+    def _fx(*args, **kwargs):
+        try:
+            return jsonify(error=0, message=fx(*args, **kwargs))
+        except Exception as ex:
+            return jsonify(error=hash(ex.__str__()), message=type(ex) + ':' + ex.__str__())
+
+    return fx
+
+
 def validate_training_config():
     global ALLOWED_CONFIG
-    cfg = request.get_json()
+    cfg = request.get_json(silent=True, force=True)
     for key in cfg:
         if key not in ALLOWED_CONFIG:
             return Exception('Key %s is not recognized!' % key)
         if not isinstance(cfg[key], (str, int, float)):
             return Exception('Key %s has wired type %s' % (key, type(key)))
-
-
-def default_response(fx):
-    def _fx(*arg, **kwargs):
-        try:
-            return jsonify(error=0, message=fx())
-        except Exception as ex:
-            return jsonify(error=hash(ex.__str__()), message=type(ex) + ':' + ex.__str__())
-    return fx
 
 
 @app.route('/train/start', methods=['POST'])
