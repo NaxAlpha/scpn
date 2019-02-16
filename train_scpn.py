@@ -567,6 +567,11 @@ if __name__ == '__main__':
         #if line != 'EOP':
         #    label_voc[line] = idx
     rev_label_voc = dict((v,k) for (k,v) in label_voc.iteritems()) 
+    print('===============================')
+    print(label_voc)
+    print('===============================')
+    print(vocab)
+    print('===============================')
 
     len_voc = len(vocab)
     len_parse_voc = len(label_voc)
