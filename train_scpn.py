@@ -509,7 +509,7 @@ if __name__ == '__main__':
             help='clip if grad norm exceeds this threshold')
     parser.add_argument('--save_freq', type=int, default=500,
             help='how many minibatches to save model')
-    parser.add_argument('--lr_decay_factor', type=int, default=0.5,
+    parser.add_argument('--lr_decay_factor', type=float, default=0.5,
             help='how much to decrease LR every epoch')
     parser.add_argument('--eval_mode', type=bool, default=False,
             help='run beam search for some examples using a trained model')

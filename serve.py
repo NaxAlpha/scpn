@@ -26,7 +26,7 @@ def default_response(fx):
         except Exception as ex:
             return jsonify(error=hash(ex.__str__()), message=type(ex) + ':' + ex.__str__())
 
-    return fx
+    return _fx
 
 
 def validate_training_config():
