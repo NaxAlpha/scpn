@@ -25,7 +25,7 @@ def start_training():
     
     args = ['--%s=%s' % (key, str(val)) for key, val in cfg.items()]
     with lock:
-        TRAINING_PROCESS = subprocess.Popen(['python', 'train_scpn.py'] + args + ['>', 'logs.txt'], cwd=os.getcwd())
+        TRAINING_PROCESS = subprocess.Popen(['python', 'train_scpn.py'] + args, cwd=os.getcwd(), stdout=open('logs.txt', 'w'))
     return jsonify(error=0, message='Training started successfully!')
 
 
