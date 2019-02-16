@@ -57,6 +57,8 @@ def start_training():
 @default_response
 def stop_training():
     global lock, TRAINING_PROCESS
+    if TRAINING_PROCESS is None:
+        return 'Training not running.'
     with lock:
         TRAINING_PROCESS.kill()
         TRAINING_PROCESS = None
@@ -76,6 +78,12 @@ def get_snapshot():
     fn = str(uuid4())
     shutil.copy('models/scpn.pt', 'temp/%s'%fn)
     return dict(snapshot_id=fn)
+
+
+@app.route('/infer/<model>')
+@default_response
+def paraphrase(model):
+    pass
 
 
 if __name__ == '__main__':
