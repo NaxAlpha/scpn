@@ -563,8 +563,8 @@ if __name__ == '__main__':
     label_voc = {}
     for idx, line in enumerate(tag_file):
         line = line.strip()
-        if line != 'EOP':
-            label_voc[line] = idx
+        #if line != 'EOP':
+        #    label_voc[line] = idx
     rev_label_voc = dict((v,k) for (k,v) in label_voc.iteritems()) 
 
     len_voc = len(vocab)
