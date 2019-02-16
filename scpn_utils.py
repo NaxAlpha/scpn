@@ -52,7 +52,7 @@ def indexify_transformations(in_p, out_p, label_voc, args):
                 out_seqs.append(out_full_trans)
                 mismatch_inds.append(idx)
             except Exception as ex:
-                print 'Why2: %s' % ex.__str__()
+                raise
 
     # no syntactic transformations in the batch!
     if len(in_seqs) == 0:
