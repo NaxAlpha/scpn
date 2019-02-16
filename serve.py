@@ -2,6 +2,8 @@ from flask import *
 import os
 import subprocess
 from threading import Lock
+import shutil
+from uuid import uuid4
 
 app = Flask(__name__)
 lock = Lock()
@@ -14,7 +16,13 @@ ALLOWED_CONFIG = ['batch_size', 'min_sent_length', 'd_word', 'd_trans', 'd_nt', 
 def default_response(fx):
     def _fx(*args, **kwargs):
         try:
-            return jsonify(error=0, message=fx(*args, **kwargs))
+            res = fx(*args, **kwargs)
+            rsp = dict(error=0)
+            if isinstance(res, str):
+                rsp.update(message=res)
+            else:
+                rsp.update(result=res)
+            return jsonify(**rsp)
         except Exception as ex:
             return jsonify(error=hash(ex.__str__()), message=type(ex) + ':' + ex.__str__())
 
@@ -65,7 +73,9 @@ def training_logs():
 @app.route('/snapshot')
 @default_response
 def get_snapshot():
-    pass
+    fn = str(uuid4())
+    shutil.copy('models/scpn.pt', 'temp/%s'%fn)
+    return dict(snapshot_id=fn)
 
 
 if __name__ == '__main__':
