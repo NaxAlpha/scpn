@@ -23,12 +23,13 @@ def default_response(fx):
 
 def validate_training_config():
     global ALLOWED_CONFIG
-    cfg = request.get_json(silent=True, force=True)
+    cfg = request.get_json()
     for key in cfg:
         if key not in ALLOWED_CONFIG:
-            return Exception('Key %s is not recognized!' % key)
+            raise Exception('Key %s is not recognized!' % key)
         if not isinstance(cfg[key], (str, int, float)):
-            return Exception('Key %s has wired type %s' % (key, type(key)))
+            raise Exception('Key %s has wired type %s' % (key, type(key)))
+    return cfg
 
 
 @app.route('/train/start', methods=['POST'])
