@@ -191,7 +191,7 @@ def paraphrase(model):
             wrt.writerow(x)
             items[i] = x['tokens']
 
-    ret = os.system('python generate_paraphrases.py --model=temp/{}'.format(model))
+    ret = os.system('python generate_paraphrases.py --pp_model=temp/{}'.format(model))
     with open('data/scpn_ex.out') as f:
         return dict(output=f.read())
         
