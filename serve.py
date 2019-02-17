@@ -97,7 +97,7 @@ def get_snapshot():
     return dict(snapshot_id=fn)
 
 
-@app.route('/upload')
+@app.route('/upload', methods=['POST'])
 @default_response
 def upload_data():
     fn = temp_file()
@@ -108,7 +108,7 @@ def upload_data():
     return args
     
 
-@app.route('/infer/<model>')
+@app.route('/infer/<model>', methods=['POST'])
 @default_response
 def paraphrase(model):
     pass
