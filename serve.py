@@ -151,7 +151,7 @@ def add_training_data():
         pp_vocab, _ = cPickle.load(fx)
 
     inputs, in_lengths, input_parses = make_trainable(content.keys(), bpe, pp_vocab)
-    outputs, out_lengths, output_parses = make_response(content.values(), bpe, pp_vocab)
+    outputs, out_lengths, output_parses = make_trainable(content.values(), bpe, pp_vocab)
     with h5py.File('data/parsed_data.h5') as f:
         f['inputs'] = np.concatenate((f['inputs'], inputs))
         f['outputs'] = np.concatenate((f['outputs'], outputs))
