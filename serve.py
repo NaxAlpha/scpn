@@ -41,7 +41,7 @@ def default_response(fx):
         except Exception as ex:
             return jsonify(error=hash(ex.__str__()), message='%s: %s' % (type(ex).__name__, ex))
 
-    return fx
+    return _fx
 
 
 def validate_training_config():
@@ -190,19 +190,10 @@ def paraphrase(model):
             x.update(idx=i)
             wrt.writerow(x)
             items[i] = x['tokens']
-    
-    rsp = {}
-    ret = os.system('python generate_paraphrases.py')
+
+    ret = os.system('python generate_paraphrases.py --model=temp/{}'.format(model))
     with open('data/scpn_ex.out') as f:
-        rdr = csv.DictReader(f.read(), ['idx', 'template', 'generated_parse', 'sentence'], delimiter='\t')
-        rdr = list(rdr)
-        for itm in rdr[1:]:
-            if itm['template'] == 'GOLD':
-                continue
-            if itm['idx'] not in rsp:
-                rsp[itm['idx']] = {}
-            rsp[itm['idx']].update({itm['generated_parse']: itm['sentence']})
-    return str(rsp)
+        return dict(output=f.read())
         
 
 
