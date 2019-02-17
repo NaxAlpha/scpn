@@ -551,6 +551,7 @@ if __name__ == '__main__':
     # load data, word vocab, and parse vocab
     h5f = h5py.File(args.data, 'r')
     inp = h5f['inputs']
+    print(inp)
     out = h5f['outputs']
     in_parses = h5f['input_parses']
     out_parses = h5f['output_parses']
