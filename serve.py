@@ -5,6 +5,7 @@ from threading import Lock
 import shutil
 from uuid import uuid4
 from functools import wraps
+import json
 
 app = Flask(__name__)
 lock = Lock()
@@ -102,7 +103,7 @@ def get_snapshot():
 def upload_data():
     fn = temp_file()
     print(fn)
-    content = request.data
+    content = json.loads(request.data)
     print(content)
     with open(fn, 'w') as f:
         f.write(content['data'])
