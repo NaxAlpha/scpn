@@ -107,7 +107,7 @@ def upload_data():
         f.write(content['data'])
     curdir = os.getcwd()
     os.chdir('/data/nlp/')
-    cmd = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 1 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file {} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory temp/'.format(fn)
+    cmd = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 1 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file /data/scpn/{} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory /data/scpn/temp/'.format(fn)
     ret = os.system(cmd)
     os.chdir(curdir)
     print(ret)
