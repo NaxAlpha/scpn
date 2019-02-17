@@ -161,6 +161,7 @@ def add_training_data():
             g.create_dataset('out_lengths', data=np.concatenate((f['out_lengths'], out_lengths)))
             g.create_dataset('input_parses', data=np.concatenate((f['input_parses'], input_parses)), dtype=ref_dtype)
             g.create_dataset('output_parses', data=np.concatenate((f['output_parses'], output_parses)), dtype=ref_dtype)
+    shutil.move('data/parsed_data2.h5', 'data/parsed_data.h5')
 
 
 @app.route('/infer/<model>', methods=['POST'])
