@@ -150,17 +150,28 @@ def add_training_data():
     with open('data/parse_vocab.pkl' , 'rb') as fx:
         pp_vocab, _ = cPickle.load(fx)
 
-    ref_dtype = h5py.special_dtype(ref=h5py.Reference)
+    ref_dtype = h5py.special_dtype(ref=str)
     inputs, in_lengths, input_parses = make_trainable(content.keys(), bpe, pp_vocab)
     outputs, out_lengths, output_parses = make_trainable(content.values(), bpe, pp_vocab)
+    data = dict(inputs=inputs, in_lengths=in_lengths, input_parses=input_parses)
+    data.update(outputs=outputs, out_lengths=out_lengths, output_parses=output_parses)
     with h5py.File('data/parsed_data2.h5') as g:
         with h5py.File('data/parsed_data.h5') as f:
-            g['inputs'] = np.concatenate((f['inputs'], inputs))
-            g['outputs'] = np.concatenate((f['outputs'], outputs))
-            g['in_lengths'] = np.concatenate((f['in_lengths'], in_lengths))
-            g['out_lengths'] = np.concatenate((f['out_lengths'], out_lengths))
-            g['input_parses'] = list(f['input_parses'])  + input_parses
-            g['output_parses'] = list(f['output_parses']) + output_parses
+            for key in data:
+                if 'parses' in key:
+                    temp = f[key]
+                    news = data[key]
+                    g.create_dataset(key, (len(temp) + len(news),), dtype=ref_dtype)
+                    g[key][:len(temp)] = temp
+                    g[key][len(temp):] = news
+                else:
+                    g[key] = np.concatenate((f[key], data[key]))
+            # g['inputs'] = np.concatenate((f['inputs'], inputs))
+            # g['outputs'] = np.concatenate((f['outputs'], outputs))
+            # g['in_lengths'] = np.concatenate((f['in_lengths'], in_lengths))
+            # g['out_lengths'] = np.concatenate((f['out_lengths'], out_lengths))
+            # g['input_parses'] = list(f['input_parses'])  + input_parses
+            # g['output_parses'] = list(f['output_parses']) + output_parses
     shutil.move('data/parsed_data2.h5', 'data/parsed_data.h5')
 
 
