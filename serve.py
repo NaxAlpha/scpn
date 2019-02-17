@@ -150,7 +150,7 @@ def add_training_data():
     with open('data/parse_vocab.pkl' , 'rb') as fx:
         pp_vocab, _ = cPickle.load(fx)
 
-    ref_dtype = h5py.special_dtype(ref=str)
+    ref_dtype = h5py.special_dtype(vlen=str)
     inputs, in_lengths, input_parses = make_trainable(content.keys(), bpe, pp_vocab)
     outputs, out_lengths, output_parses = make_trainable(content.values(), bpe, pp_vocab)
     data = dict(inputs=inputs, in_lengths=in_lengths, input_parses=input_parses)
