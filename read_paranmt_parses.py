@@ -5,7 +5,6 @@ from nltk import Tree
 from collections import OrderedDict, Counter
 from itertools import izip
 from unidecode import unidecode
-from downstream_tasks.utils import read_sst
 
 PASSIVE_RELS = set(['nsubjpass', 'auxpass', 'csubjpass'])
 
