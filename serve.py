@@ -101,10 +101,13 @@ def get_snapshot():
 @default_response
 def upload_data():
     fn = temp_file()
+    print(fn)
     content = request.get_json()
+    print(content)
     with open(fn, 'w') as f:
         f.write(content['data'])
     args = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 1 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file {} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory temp/'.format(fn).split()
+    print(args)
     return dict(f=args)
     
 
