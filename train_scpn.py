@@ -557,7 +557,7 @@ if __name__ == '__main__':
     out_parses = h5f['output_parses']
     in_lens = h5f['in_lengths']
     out_lens = h5f['out_lengths']
-    h5f.close()
+    h5ff.close()
 
     vocab, rev_vocab = \
         cPickle.load(open(args.vocab, 'rb'))
