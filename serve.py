@@ -157,7 +157,7 @@ def add_training_data():
         with h5py.File('data/parsed_data.h5') as f:
             g['inputs'] = np.concatenate((f['inputs'], inputs))
             g['outputs']=np.concatenate((f['outputs'], outputs))
-            g['in_lengths']=np.concatenate((f['in_lengths'], in_lengths)
+            g['in_lengths']=np.concatenate((f['in_lengths'], in_lengths))
             g['out_lengths']=np.concatenate((f['out_lengths'], out_lengths))
             g['input_parses']=np.concatenate((f['input_parses'], input_parses))
             g['output_parses']=np.concatenate((f['output_parses'], output_parses))
