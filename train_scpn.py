@@ -481,7 +481,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Syntactically Controlled Paraphrase Network')
     parser.add_argument('--gpu', type=str, default='0',
             help='GPU id')
-    parser.add_argument('--data', type=str, default='../parsed_data.h5',
+    parser.add_argument('--data', type=str, default='data/parsed_data.h5',
             help='hdf5 location')
     parser.add_argument('--vocab', type=str, default='data/parse_vocab.pkl',
             help='word vocabulary')
