@@ -102,7 +102,7 @@ def get_snapshot():
 def upload_data():
     fn = temp_file()
     print(fn)
-    content = request.get_json()
+    content = request.data
     print(content)
     with open(fn, 'w') as f:
         f.write(content['data'])
