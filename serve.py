@@ -181,12 +181,11 @@ def paraphrase(model):
         f.write('\n'.join(data['phrases']))
     data = process_data(sent_file)
     with open('data/scpn_ex.tsv', 'w') as f:
-        fields = ['idx', 'tokens', 'parses']
+        fields = ['idx', 'tokens', 'parse']
         wrt = csv.DictWriter(f, fields, delimiter='\t')
         wrt.writerow({f:f for f in fields})
         for i, x in enumerate(data):
             x.update(idx=i)
-            x['parses'] = x.pop('parse')
             wrt.writerow(x)
     ret = os.system('python generate_paraphrases.py')
     with open('data/scpn_ex.out') as f:
