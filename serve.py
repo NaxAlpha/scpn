@@ -175,7 +175,7 @@ def add_training_data():
 def paraphrase(model):
     data = request.get_json()
     with open('data/templates.json', 'w') as f:
-        json.dump(data['templates'])
+        json.dump(data['templates'], f)
     sent_file = temp_file()
     with open(sent_file, 'w') as f:
         f.write('\n'.join(data['phrases']))
@@ -194,5 +194,5 @@ def paraphrase(model):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=80)
 
