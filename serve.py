@@ -54,7 +54,7 @@ def validate_training_config():
 def process_data(fin):
     curdir = os.getcwd()
     os.chdir('/data/nlp/')
-    cmd = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 1 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file /data/scpn/{} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory /data/scpn/temp/'.format(fn)
+    cmd = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 8 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file /data/scpn/{} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory /data/scpn/temp/'.format(fin)
     ret = os.system(cmd)
     os.chdir(curdir)
     shutil.move(fin + '.out', 'data/paranmt_dev_parses.txt')
