@@ -155,8 +155,8 @@ def add_training_data():
     outputs, out_lengths, output_parses = make_trainable(content.values(), bpe, pp_vocab)
     data = dict(inputs=inputs, in_lengths=in_lengths, input_parses=input_parses)
     data.update(outputs=outputs, out_lengths=out_lengths, output_parses=output_parses)
-    with h5py.File('data/parsed_data2.h5') as g:
-        with h5py.File('data/parsed_data.h5') as f:
+    with h5py.File('data/parsed_data2.h5', 'w') as g:
+        with h5py.File('data/parsed_data.h5', 'r') as f:
             for key in data:
                 if 'parses' in key:
                     temp = f[key]
@@ -182,5 +182,5 @@ def paraphrase(model):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80, debug=True)
 
