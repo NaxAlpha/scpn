@@ -6,6 +6,7 @@ import shutil
 from uuid import uuid4
 from functools import wraps
 import json
+import csv
 
 app = Flask(__name__)
 lock = Lock()
@@ -48,6 +49,22 @@ def validate_training_config():
         if not isinstance(cfg[key], (str, int, float)):
             raise Exception('Key %s has wired type %s' % (key, type(key)))
     return cfg
+
+
+def process_data(fin):
+    curdir = os.getcwd()
+    os.chdir('/data/nlp/')
+    cmd = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 1 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file /data/scpn/{} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory /data/scpn/temp/'.format(fn)
+    ret = os.system(cmd)
+    os.chdir(curdir)
+    shutil.move(fin + '.out', 'data/paranmt_dev_parses.txt')
+    cmd = 'python read_paranmt_parses.py'
+    ret = os.system(cmd)
+    fout = str(uuid4())
+    with open('data/parsed_paranmt.csv', 'r') as f:
+        reader = csv.DictReader(f, delimiter='\t', fieldnames=['tokens', 'parse'])
+        return [row for row in reader]
+
 
 
 @app.route('/train/start', methods=['POST'])
@@ -98,24 +115,15 @@ def get_snapshot():
     return dict(snapshot_id=fn)
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/train/data', methods=['POST'])
 @default_response
-def upload_data():
+def add_training_data():
     fn = temp_file()
     content = request.get_json()
     with open(fn, 'w') as f:
         f.write(content['data'])
-    curdir = os.getcwd()
-    os.chdir('/data/nlp/')
-    cmd = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 1 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file /data/scpn/{} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory /data/scpn/temp/'.format(fn)
-    ret = os.system(cmd)
-    os.chdir(curdir)
-    print(ret)
-    shutil.move(fn + '.out', 'data/paranmt_dev_parses.txt')
-    cmd = 'python read_paranmt_parses.py'
-    ret = os.system(cmd)
-    print(ret)
-    return 'well'
+    return str(process_data(fn))
+    
     
 
 @app.route('/infer/<model>', methods=['POST'])
@@ -125,5 +133,5 @@ def paraphrase(model):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, threaded=True)
+    app.run(host='0.0.0.0', port=80)
 
