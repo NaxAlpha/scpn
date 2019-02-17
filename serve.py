@@ -165,7 +165,7 @@ def add_training_data():
                     g[key][:len(temp)] = temp
                     g[key][len(temp):] = news
                 else:
-                    g[key] = np.concatenate((f[key], data[key]))
+                    g.create_dataset(key, data=np.concatenate((f[key], data[key])), dtype = 'float32')
             # g['inputs'] = np.concatenate((f['inputs'], inputs))
             # g['outputs'] = np.concatenate((f['outputs'], outputs))
             # g['in_lengths'] = np.concatenate((f['in_lengths'], in_lengths))
