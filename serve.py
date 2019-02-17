@@ -179,17 +179,28 @@ def paraphrase(model):
     sent_file = temp_file()
     with open(sent_file, 'w') as f:
         f.write('\n'.join(data['phrases']))
+    
+    items = {}
+    fields = ['idx', 'tokens', 'parse']
     data = process_data(sent_file)
-    with open('data/scpn_ex.tsv', 'w') as f:
-        fields = ['idx', 'tokens', 'parse']
+    with open('data/scpn_ex.tsv', 'w') as f:    
         wrt = csv.DictWriter(f, fields, delimiter='\t')
         wrt.writerow({f:f for f in fields})
         for i, x in enumerate(data):
             x.update(idx=i)
             wrt.writerow(x)
+            items[i] = x['tokens']
+    
+    rsp = {}
     ret = os.system('python generate_paraphrases.py')
     with open('data/scpn_ex.out') as f:
-        return f.read()
+        rdr = csv.DictReader(f.read(), ['idx', 'template', 'generated_parse', 'sentence'], delimiter='\t')
+        rdr = list(rdr)
+        for itm in rdr[1:]:
+            if itm['template'] == 'GOLD':
+                continue
+            rsp[items[itm['idx']]] = {itm['generated_parse']: itm['sentence']}
+    return rsp
         
 
 
