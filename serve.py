@@ -173,6 +173,7 @@ def add_training_data():
             # g['input_parses'] = list(f['input_parses'])  + input_parses
             # g['output_parses'] = list(f['output_parses']) + output_parses
     shutil.move('data/parsed_data2.h5', 'data/parsed_data.h5')
+    return "Yes!"
 
 
 @app.route('/infer/<model>', methods=['POST'])
