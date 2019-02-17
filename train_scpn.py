@@ -487,7 +487,7 @@ if __name__ == '__main__':
             help='word vocabulary')
     parser.add_argument('--parse_vocab', type=str, default='data/ptb_tagset.txt',
             help='tag vocabulary')
-    parser.add_argument('--model', type=str, default='models/scpn.pt',
+    parser.add_argument('--model', type=str, default='scpn.pt',
             help='model save path')
     parser.add_argument('--batch_size', type=int, default=64,
             help='batch size')

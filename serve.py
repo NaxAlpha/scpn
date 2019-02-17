@@ -166,20 +166,31 @@ def add_training_data():
                     g[key][len(temp):] = news
                 else:
                     g.create_dataset(key, data=np.concatenate((f[key], data[key])), dtype = 'float32')
-            # g['inputs'] = np.concatenate((f['inputs'], inputs))
-            # g['outputs'] = np.concatenate((f['outputs'], outputs))
-            # g['in_lengths'] = np.concatenate((f['in_lengths'], in_lengths))
-            # g['out_lengths'] = np.concatenate((f['out_lengths'], out_lengths))
-            # g['input_parses'] = list(f['input_parses'])  + input_parses
-            # g['output_parses'] = list(f['output_parses']) + output_parses
     shutil.move('data/parsed_data2.h5', 'data/parsed_data.h5')
-    return "Yes!"
+    return "Dataset updated!"
 
 
 @app.route('/infer/<model>', methods=['POST'])
 @default_response
 def paraphrase(model):
-    pass
+    data = request.get_json()
+    with open('data/templates.json', 'w') as f:
+        json.dump(data['templates'])
+    sent_file = temp_file()
+    with open(sent_file, 'w') as f:
+        f.write('\n'.join(data['phrases']))
+    data = process_data(sent_file)
+    with open('data/scpn_ex.tsv', 'w') as f:
+        fields = ['idx', 'tokens', 'parses']
+        wrt = csv.DictWriter(f, fields)
+        wrt.writerow({f:f for f in fields})
+        for i, x in enumerate(data):
+            x.update(idx=i)
+            wrt.writerow(x)
+    ret = os.system('python generate_paraphrases.py')
+    with open('data/scpn_ex.out') as f:
+        return f.read()
+        
 
 
 if __name__ == '__main__':

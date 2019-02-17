@@ -7,22 +7,12 @@ from train_scpn import SCPN
 from train_parse_generator import ParseNet
 from subwordnmt.apply_bpe import BPE, read_vocabulary
 from scpn_utils import deleaf, parse_indexify_transformations
+import json
 reload(sys)
 sys.setdefaultencoding('utf8')
 
 # 10 frequent templates
-templates = [
-            '( ROOT ( S ( NP ) ( VP ) ( . ) ) ) EOP',
-            '( ROOT ( S ( VP ) ( . ) ) ) EOP',
-            '( ROOT ( NP ( NP ) ( . ) ) ) EOP',
-            '( ROOT ( FRAG ( SBAR ) ( . ) ) ) EOP',
-            '( ROOT ( S ( S ) ( , ) ( CC ) ( S ) ( . ) ) ) EOP',
-            '( ROOT ( S ( LST ) ( VP ) ( . ) ) ) EOP',
-            '( ROOT ( SBARQ ( WHADVP ) ( SQ ) ( . ) ) ) EOP',
-            '( ROOT ( S ( PP ) ( , ) ( NP ) ( VP ) ( . ) ) ) EOP',
-            '( ROOT ( S ( ADVP ) ( NP ) ( VP ) ( . ) ) ) EOP',
-            '( ROOT ( S ( SBAR ) ( , ) ( NP ) ( VP ) ( . ) ) ) EOP'
-    ]
+templates = json.load(open('data/templates.json'))
 
 def reverse_bpe(sent):
     x = []
