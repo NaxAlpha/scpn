@@ -82,7 +82,7 @@ def make_trainable(data, bpe, vocab):
         k = bpe.segment(item['tokens'].lower()).split()
         k = [vocab[i] for i in k if i in vocab] + [vocab['EOS']]
         lengths.append(len(k))
-        parses.append(item['parse'])
+        parses.append(unicode(item['parse']))
         [k.append(0) for _ in range(40-len(k))]
         processed.append(np.array(k, dtype='int16'))
     return np.array(processed, dtype='int16'), \
