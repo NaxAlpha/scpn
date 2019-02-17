@@ -102,14 +102,20 @@ def get_snapshot():
 @default_response
 def upload_data():
     fn = temp_file()
-    print(fn)
-    content = json.loads(request.data)
-    print(content)
+    content = request.get_json()
     with open(fn, 'w') as f:
         f.write(content['data'])
-    args = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 1 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file {} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory temp/'.format(fn).split()
-    print(args)
-    return dict(f=args)
+    curdir = os.getcwd()
+    os.chdir('/data/nlp/')
+    cmd = 'java -Xmx12g -cp "*" edu.stanford.nlp.pipeline.StanfordCoreNLP -threads 1 -annotators tokenize,ssplit,pos,parse -ssplit.eolonly -file {} -outputFormat text -parse.model edu/stanford/nlp/models/srparser/englishSR.ser.gz -outputDirectory temp/'.format(fn)
+    ret = os.system(cmd)
+    os.chdir(curdir)
+    print(ret)
+    shutil.move(fn + '.out', 'data/paranmt_dev_parses.txt')
+    cmd = 'python read_paranmt_parses.py'
+    ret = os.system(cmd)
+    print(ret)
+    return 'well'
     
 
 @app.route('/infer/<model>', methods=['POST'])
