@@ -552,8 +552,8 @@ if __name__ == '__main__':
     h5f = h5py.File(args.data, 'r')
     inp = np.array(h5f['inputs'])
     out = np.array(h5f['outputs'])
-    in_parses = np.array(h5f['input_parses'])
-    out_parses = np.array(h5f['output_parses'])
+    in_parses = h5f['input_parses']
+    out_parses = h5f['output_parses']
     in_lens = np.array(h5f['in_lengths'])
     out_lens = np.array(h5f['out_lengths'])
     h5f.close()
