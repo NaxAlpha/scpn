@@ -150,6 +150,7 @@ def add_training_data():
     with open('data/parse_vocab.pkl' , 'rb') as fx:
         pp_vocab, _ = cPickle.load(fx)
 
+    ref_dtype = h5py.special_dtype(ref=h5py.Reference)
     inputs, in_lengths, input_parses = make_trainable(content.keys(), bpe, pp_vocab)
     outputs, out_lengths, output_parses = make_trainable(content.values(), bpe, pp_vocab)
     with h5py.File('data/parsed_data2.h5') as g:
@@ -158,8 +159,8 @@ def add_training_data():
             g.create_dataset('outputs', data=np.concatenate((f['outputs'], outputs)))
             g.create_dataset('in_lengths', data=np.concatenate((f['in_lengths'], in_lengths)))
             g.create_dataset('out_lengths', data=np.concatenate((f['out_lengths'], out_lengths)))
-            g.create_dataset('input_parses', data=np.concatenate((f['input_parses'], input_parses)))
-            g.create_dataset('output_parses', data=np.concatenate((f['output_parses'], output_parses)))
+            g.create_dataset('input_parses', data=np.concatenate((f['input_parses'], input_parses)), dtype=ref_dtype)
+            g.create_dataset('output_parses', data=np.concatenate((f['output_parses'], output_parses)), dtype=ref_dtype)
 
 
 @app.route('/infer/<model>', methods=['POST'])
