@@ -7,6 +7,10 @@ from uuid import uuid4
 from functools import wraps
 import json
 import csv
+from subwordnmt.apply_bpe import BPE, read_vocabulary
+import numpy as np
+import cPickle
+import h5py
 
 app = Flask(__name__)
 lock = Lock()
@@ -63,8 +67,27 @@ def process_data(fin):
     fout = str(uuid4())
     with open('data/parsed_paranmt.csv', 'r') as f:
         reader = csv.DictReader(f, delimiter='\t', fieldnames=['tokens', 'parse'])
-        return [row for row in reader]
+        return [row for row in reader][1:]
 
+
+def make_trainable(data, bpe, vocab):
+    data_file = temp_file()
+    with open(data_file, 'w') as f:
+        f.write('\n'.join(data))
+    data_parses = process_data(data_file)
+    processed = []
+    lengths = []
+    parses = []
+    for item in data_parses:
+        k = bpe.segment(item['tokens'].lower()).split()
+        k = [vocab[i] for i in k if i in vocab] + [vocab['EOS']]
+        lengths.append(len(k))
+        parses.append()
+        [k.append(0) for _ in range(40-len(k))]
+        processed.append(np.array(k, dtype='int16'))
+    return np.array(processed, dtype='int16'), \
+        np.array(lengths, dtype='|u1'), \
+        np.array(parses, dtype=object)
 
 
 @app.route('/train/start', methods=['POST'])
@@ -118,13 +141,25 @@ def get_snapshot():
 @app.route('/train/data', methods=['POST'])
 @default_response
 def add_training_data():
-    fn = temp_file()
     content = request.get_json()
-    with open(fn, 'w') as f:
-        f.write(content['data'])
-    return str(process_data(fn))
-    
-    
+
+    with open('data/vocab.txt') as vocab:
+        vocab = read_vocabulary(vocab, 50)
+    with open('data/bpe.codes') as codes:
+        bpe = BPE(codes, vocab=vocab)
+    with open('data/parse_vocab.pkl' , 'rb') as fx:
+        pp_vocab, _ = cPickle.load(fx)
+
+    inputs, in_lengths, input_parses = make_trainable(content.keys(), bpe, pp_vocab)
+    outputs, out_lengths, output_parses = make_response(content.values(), bpe, pp_vocab)
+    with h5py.File('data/parsed_data.h5') as f:
+        f['inputs'] = np.concatenate((f['inputs'], inputs))
+        f['outputs'] = np.concatenate((f['outputs'], outputs))
+        f['in_lengths'] = np.concatenate((f['in_lengths'], in_lengths))
+        f['out_lengths'] = np.concatenate((f['out_lengths'], out_lengths))
+        f['input_parses'] = np.concatenate((f['input_parses'], input_parses))
+        f['output_parses'] = np.concatenate((f['output_parses'], output_parses))
+
 
 @app.route('/infer/<model>', methods=['POST'])
 @default_response
