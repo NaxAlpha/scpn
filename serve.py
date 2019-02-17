@@ -154,12 +154,12 @@ def add_training_data():
     outputs, out_lengths, output_parses = make_trainable(content.values(), bpe, pp_vocab)
     with h5py.File('data/parsed_data2.h5') as g:
         with h5py.File('data/parsed_data.h5') as f:
-            g['inputs'] = np.concatenate((f['inputs'], inputs))
-            g['outputs'] = np.concatenate((f['outputs'], outputs))
-            g['in_lengths'] = np.concatenate((f['in_lengths'], in_lengths))
-            g['out_lengths'] = np.concatenate((f['out_lengths'], out_lengths))
-            g['input_parses'] = np.concatenate((f['input_parses'], input_parses))
-            g['output_parses'] = np.concatenate((f['output_parses'], output_parses))
+            g.create_dataset('inputs', data=np.concatenate((f['inputs'], inputs)))
+            g.create_dataset('outputs', data=np.concatenate((f['outputs'], outputs)))
+            g.create_dataset('in_lengths', data=np.concatenate((f['in_lengths'], in_lengths)))
+            g.create_dataset('out_lengths', data=np.concatenate((f['out_lengths'], out_lengths)))
+            g.create_dataset('input_parses', data=np.concatenate((f['input_parses'], input_parses)))
+            g.create_dataset('output_parses', data=np.concatenate((f['output_parses'], output_parses)))
 
 
 @app.route('/infer/<model>', methods=['POST'])
