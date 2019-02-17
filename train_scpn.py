@@ -481,13 +481,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Syntactically Controlled Paraphrase Network')
     parser.add_argument('--gpu', type=str, default='0',
             help='GPU id')
-    parser.add_argument('--data', type=str, default='data/parsed_data.h5',
+    parser.add_argument('--data', type=str, default='../parsed_data.h5',
             help='hdf5 location')
     parser.add_argument('--vocab', type=str, default='data/parse_vocab.pkl',
             help='word vocabulary')
     parser.add_argument('--parse_vocab', type=str, default='data/ptb_tagset.txt',
             help='tag vocabulary')
-    parser.add_argument('--model', type=str, default='scpn.pt',
+    parser.add_argument('--model', type=str, default='models/scpn.pt',
             help='model save path')
     parser.add_argument('--batch_size', type=int, default=64,
             help='batch size')
@@ -513,7 +513,7 @@ if __name__ == '__main__':
             help='how much to decrease LR every epoch')
     parser.add_argument('--eval_mode', type=bool, default=False,
             help='run beam search for some examples using a trained model')
-    parser.add_argument('--init_trained_model', type=int, default=1,
+    parser.add_argument('--init_trained_model', type=int, default=0,
             help='continue training a cached model')
     parser.add_argument('--tree_dropout', type=float, default=0.,
             help='dropout rate for dropping tree terminals')

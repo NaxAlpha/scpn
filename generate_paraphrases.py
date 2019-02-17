@@ -118,7 +118,7 @@ if __name__ == '__main__':
     ## paraphrase model args
     parser.add_argument('--gpu', type=str, default='0',
             help='GPU id')
-    parser.add_argument('--out_file', type=str, default='scpn_ex.out',
+    parser.add_argument('--out_file', type=str, default='data/scpn_ex.out',
             help='paraphrase save path')
     parser.add_argument('--parsed_input_file', type=str, default='data/scpn_ex.tsv',
             help='parse load path')
@@ -128,7 +128,7 @@ if __name__ == '__main__':
             help='tag vocabulary')
     parser.add_argument('--pp_model', type=str, default='models/scpn.pt',
             help='paraphrase model to load')
-    parser.add_argument('--parse_model', type=str, default='models/parse_generator.pt',
+    parser.add_argument('--parse_model', type=str, default='../models/parse_generator.pt',
             help='model save path')
 
     ## BPE args
