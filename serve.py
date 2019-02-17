@@ -41,7 +41,7 @@ def default_response(fx):
         except Exception as ex:
             return jsonify(error=hash(ex.__str__()), message='%s: %s' % (type(ex).__name__, ex))
 
-    return _fx
+    return fx
 
 
 def validate_training_config():
@@ -200,7 +200,7 @@ def paraphrase(model):
             if itm['template'] == 'GOLD':
                 continue
             rsp[items[itm['idx']]] = {itm['generated_parse']: itm['sentence']}
-    return rsp
+    return str(rsp)
         
 
 
