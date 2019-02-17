@@ -199,7 +199,9 @@ def paraphrase(model):
         for itm in rdr[1:]:
             if itm['template'] == 'GOLD':
                 continue
-            rsp[items[itm['idx']]] = {itm['generated_parse']: itm['sentence']}
+            if itm['idx'] not in rsp:
+                rsp[itm['idx']] = {}
+            rsp[itm['idx']].update({itm['generated_parse']: itm['sentence']})
     return str(rsp)
         
 
