@@ -87,7 +87,7 @@ def make_trainable(data, bpe, vocab):
         processed.append(np.array(k, dtype='int16'))
     return np.array(processed, dtype='int16'), \
         np.array(lengths, dtype='|u1'), \
-        np.array(parses, dtype=object)
+        np.array(parses)
 
 
 @app.route('/train/start', methods=['POST'])
