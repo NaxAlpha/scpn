@@ -549,8 +549,8 @@ if __name__ == '__main__':
     np.random.seed(args.seed)
     
     # load data, word vocab, and parse vocab
-    h5f = h5py.File(args.data, 'r')
-    h5f = h5f['.']
+    h5ff = h5py.File(args.data, 'r')
+    h5f = h5ff['.']
     inp = h5f['inputs']
     out = h5f['outputs']
     in_parses = h5f['input_parses']
